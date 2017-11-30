@@ -2,6 +2,7 @@
  * Nestable jQuery Plugin - Copyright (c) 2012 David Bushell - http://dbushell.com/
  * Dual-licensed under the BSD or MIT licenses
  */
+
 ;(function($, window, document, undefined)
 {
     var hasTouch = 'ontouchstart' in document;
@@ -30,6 +31,7 @@
             listNodeName    : 'ol',
             itemNodeName    : 'li',
             rootClass       : 'dd',
+            rootListClass   : 'dd-root-list',
             listClass       : 'dd-list',
             itemClass       : 'dd-item',
             dragClass       : 'dd-dragel',
@@ -287,12 +289,29 @@
 
         dragStop: function(e)
         {
+            var mouse = this.mouse;
             var el = this.dragEl.children(this.options.itemNodeName).first();
+
             el[0].parentNode.removeChild(el[0]);
+
+            // place event generation
+            var placeEvent = $.Event('place', {
+                placedEl: el,
+                prevEl: this.placeEl.prev(),
+                nextEl: this.placeEl.next(),
+                parentEl: this.placeEl.parent().hasClass(this.options.rootListClass) ? this.placeEl.parent() : this.placeEl.parent().closest(this.options.itemNodeName)
+            });
+
+            // place event emission
+            if ((Math.abs(mouse.startY - mouse.nowY) >= this.options.threshold && Math.abs(mouse.startY - mouse.nowY) < this.dragRootEl.height()) || Math.abs(mouse.startX - mouse.nowX) >= this.options.threshold) {
+                this.el.trigger(placeEvent);
+            }
+
             this.placeEl.replaceWith(el);
 
             this.dragEl.remove();
             this.el.trigger('change');
+
             if (this.hasNewRoot) {
                 this.dragRootEl.trigger('change');
             }
