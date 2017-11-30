@@ -51,6 +51,12 @@ The `change` event is fired when items are reordered.
         /* on change event */
     });
 
+The 'place' event is fired when items have been reordered (only if the dragged item moved beyond the thresholder value on X or/and Y axes), but it contains more data in its event object, such as:
+    placedEl - the element that was just being dragged,
+    prevEl - the sibling element which now stands previous to the newly moved element,
+    nextEl - the sibling element right next to the placedEl
+    parentEl - placedEl's parent element
+
 ### Methods
 
 You can get a serialised object with all `data-*` attributes for each item.
@@ -73,6 +79,7 @@ These advanced config options are also available:
 * `listNodeName` The HTML element to create for lists (default `'ol'`)
 * `itemNodeName` The HTML element to create for list items (default `'li'`)
 * `rootClass` The class of the root element `.nestable()` was used on (default `'dd'`)
+* `rootListClass' The class of the root list element (the first child of the root element)
 * `listClass` The class of all list elements (default `'dd-list'`)
 * `itemClass` The class of all list item elements (default `'dd-item'`)
 * `dragClass` The class applied to the list element that is being dragged (default `'dd-dragel'`)
